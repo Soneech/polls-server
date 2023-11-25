@@ -3,7 +3,7 @@ package org.soneech.controller;
 import jakarta.validation.Valid;
 import org.soneech.dto.AuthenticationDTO;
 import org.soneech.dto.RegistrationDTO;
-import org.soneech.dto.UserDTO;
+import org.soneech.dto.UserInfoDTO;
 import org.soneech.exception.AuthException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.User;
@@ -45,8 +45,8 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDTO> register(@RequestBody @Valid RegistrationDTO registrationDTO,
-                                            BindingResult bindingResult) {
+    public ResponseEntity<UserInfoDTO> register(@RequestBody @Valid RegistrationDTO registrationDTO,
+                                                BindingResult bindingResult) {
         User user = mapper.convertToUser(registrationDTO);
         userValidator.validate(user, bindingResult);
 
@@ -54,7 +54,7 @@ public class AuthController {
             throw new AuthException(HttpStatus.BAD_REQUEST, errorsUtil.prepareFieldsErrorMessage(bindingResult));
 
         User savedUser = userService.register(user);
-        return new ResponseEntity<>(mapper.convertToUserDTO(savedUser), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.convertToUserInfoDTO(savedUser));
     }
 
     @PostMapping("/login")
@@ -72,6 +72,6 @@ public class AuthController {
         }
 
         String jwt = jwtUtil.generateToken(authenticationDTO.getName());
-        return new ResponseEntity<>(Map.of("jwt", jwt), HttpStatus.OK);
+        return ResponseEntity.ok(Map.of("jwt", jwt));
     }
 }

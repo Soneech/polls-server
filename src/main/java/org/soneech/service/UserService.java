@@ -1,10 +1,9 @@
 package org.soneech.service;
 
-import org.soneech.exception.AuthException;
+import org.soneech.exception.UserNotFoundException;
 import org.soneech.model.User;
 import org.soneech.repository.RoleRepository;
 import org.soneech.repository.UserRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +34,7 @@ public class UserService {
     public User findById(Long id) {
         Optional<User> foundUser = userRepository.findById(id);
         if (foundUser.isEmpty())
-            throw new AuthException(HttpStatus.NOT_FOUND, "Пользователь с таким id не найден");
+            throw new UserNotFoundException();
         return foundUser.get();
     }
 
