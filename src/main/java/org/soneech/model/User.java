@@ -8,8 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -22,12 +22,12 @@ public class User {
     private Long id;
 
     @NotEmpty
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 100)
     private String name;
 
     @NotEmpty
     @Email
-    @Size(min = 6, max = 50)
+    @Size(min = 6, max = 100)
     private String email;
 
     @NotEmpty
@@ -39,5 +39,5 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
 }
