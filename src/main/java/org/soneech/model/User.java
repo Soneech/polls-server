@@ -2,7 +2,7 @@ package org.soneech.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,16 +21,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
+    @NotBlank
     @Size(min = 2, max = 100)
     private String name;
 
-    @NotEmpty
+    @NotBlank
     @Email
     @Size(min = 6, max = 100)
     private String email;
 
-    @NotEmpty
+    @NotBlank
     private String password;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -40,4 +40,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Poll> createdPolls = new ArrayList<>();
+
+    @Transient
+    private List<Poll> pollsInWhichVoted = new ArrayList<>();
 }
