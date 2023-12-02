@@ -1,9 +1,9 @@
 package org.soneech.controller;
 
 import jakarta.validation.Valid;
-import org.soneech.dto.AuthenticationDTO;
-import org.soneech.dto.RegistrationDTO;
-import org.soneech.dto.UserInfoDTO;
+import org.soneech.dto.response.AuthenticationDTO;
+import org.soneech.dto.response.RegistrationDTO;
+import org.soneech.dto.response.UserInfoDTO;
 import org.soneech.exception.AuthException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.User;

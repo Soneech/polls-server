@@ -17,13 +17,15 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final PollService pollService;
     private final PasswordEncoder passwordEncoder;
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PollService pollService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.pollService = pollService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -35,6 +37,8 @@ public class UserService {
         Optional<User> foundUser = userRepository.findById(id);
         if (foundUser.isEmpty())
             throw new UserNotFoundException();
+
+        foundUser.get().setPollsInWhichVoted(pollService.findPollsInWhichUserVoted(id));
         return foundUser.get();
     }
 

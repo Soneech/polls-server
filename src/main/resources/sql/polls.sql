@@ -16,3 +16,6 @@ CREATE TABLE Vote(
     answer_id bigint REFERENCES answer(id) ON DELETE CASCADE NOT NULL,
     user_id bigint REFERENCES users(id) ON DELETE CASCADE NOT NULL
 );
+
+ALTER TABLE vote
+    ADD CONSTRAINT constraint_answer_user_unique UNIQUE (answer_id, user_id);

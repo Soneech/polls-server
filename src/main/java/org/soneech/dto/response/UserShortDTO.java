@@ -1,4 +1,4 @@
-package org.soneech.dto;
+package org.soneech.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

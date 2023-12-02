@@ -30,6 +30,10 @@ public class PollService {
         return foundPoll.get();
     }
 
+    public List<Poll> findPollsInWhichUserVoted(Long userId) {
+        return pollRepository.findPollsInWhichUserVoted(userId);
+    }
+
     public Poll save(Poll poll) {
         poll.setCreatedAt(LocalDateTime.now());
         return pollRepository.save(poll);

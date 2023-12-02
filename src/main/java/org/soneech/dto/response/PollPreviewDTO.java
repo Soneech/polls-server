@@ -1,16 +1,14 @@
-package org.soneech.dto;
+package org.soneech.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
-public class PollDTO {
+public class PollPreviewDTO {
     private Long id;
     private String theme;
 
@@ -19,7 +17,4 @@ public class PollDTO {
 
     @JsonProperty("user")
     private UserShortDTO userShortDTO;
-
-    @JsonProperty("answers")
-    private List<AnswerDTO> answerDTOS = new ArrayList<>();
 }

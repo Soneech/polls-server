@@ -1,7 +1,7 @@
 package org.soneech.controller;
 
-import org.soneech.dto.UserDTO;
-import org.soneech.dto.UserPublicInfoDTO;
+import org.soneech.dto.response.UserDTO;
+import org.soneech.dto.response.UserPublicInfoDTO;
 import org.soneech.exception.UserNotFoundException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.User;
@@ -32,6 +32,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserPublicInfoDTO>> getAllUsers() {
         List<User> users = userService.findAll();
+
         List<UserPublicInfoDTO> publicInfoDTOS =
                 users.stream().map(defaultMapper::convertToUserPublicInfoDTO).toList();
         return ResponseEntity.ok(publicInfoDTOS);
