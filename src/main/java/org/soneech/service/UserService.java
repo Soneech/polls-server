@@ -4,6 +4,7 @@ import org.soneech.exception.UserNotFoundException;
 import org.soneech.model.User;
 import org.soneech.repository.RoleRepository;
 import org.soneech.repository.UserRepository;
+import org.soneech.security.JWTUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,14 +20,16 @@ public class UserService {
     private final RoleRepository roleRepository;
     private final PollService pollService;
     private final PasswordEncoder passwordEncoder;
+    private final JWTUtil jwtUtil;
 
 
     public UserService(UserRepository userRepository, RoleRepository roleRepository,
-                       PollService pollService, PasswordEncoder passwordEncoder) {
+                       PollService pollService, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.pollService = pollService;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public List<User> findAll() {
@@ -46,10 +49,20 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public Optional<User> findByName(String name) {  // for validation
+        return userRepository.findByName(name);
+    }
+
     @Transactional
     public User register(User user) {
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER").get()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public User getUserByClaimsInJWT(String jwt) {
+        String username = jwtUtil.validateTokenAndRetrieveClaim(jwt);
+        Optional<User> foundUser = findByName(username);
+        return foundUser.orElse(null);
     }
 }

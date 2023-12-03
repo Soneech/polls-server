@@ -58,8 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO)
-                                                    throws AuthenticationException {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO) {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(
                         authenticationDTO.getName(),

@@ -1,11 +1,13 @@
 package org.soneech.mapper;
 
 import org.modelmapper.ModelMapper;
+import org.soneech.dto.request.VoteRequestDTO;
 import org.soneech.dto.response.*;
 import org.soneech.model.Answer;
 import org.soneech.model.Poll;
 import org.soneech.model.User;
 import org.soneech.model.Vote;
+import org.soneech.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,10 +17,12 @@ import java.util.List;
 @Component
 public class DefaultMapper {
     private final ModelMapper modelMapper;
+    private final AnswerService answerService;
 
     @Autowired
-    public DefaultMapper(ModelMapper modelMapper) {
+    public DefaultMapper(ModelMapper modelMapper, AnswerService answerService) {
         this.modelMapper = modelMapper;
+        this.answerService = answerService;
     }
 
     public User convertToUser(RegistrationDTO registrationDTO) {
@@ -89,5 +93,13 @@ public class DefaultMapper {
 
     public PollShortDTO convertToPollShortDTO(Poll poll) {
         return modelMapper.map(poll, PollShortDTO.class);
+    }
+
+    public Vote convertToVote(VoteRequestDTO voteRequestDTO, User user) {
+        Vote vote = new Vote();
+        vote.setAnswer(answerService.findById(voteRequestDTO.getAnswerId()));
+        vote.setUser(user);
+
+        return vote;
     }
 }
