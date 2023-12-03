@@ -5,6 +5,8 @@ import org.soneech.repository.AnswerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AnswerService {
     private final AnswerRepository answerRepository;
@@ -16,5 +18,9 @@ public class AnswerService {
 
     public Answer findById(Long id) {
         return answerRepository.findById(id).orElse(null);
+    }
+
+    public void saveAll(List<Answer> answers) {
+        answerRepository.saveAll(answers);
     }
 }

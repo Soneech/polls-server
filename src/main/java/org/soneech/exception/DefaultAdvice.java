@@ -29,6 +29,11 @@ public class DefaultAdvice {
         return defaultErrorMessage(exception.getStatus(), exception.getMessage());
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> handlePollException(PollException exception) {
+        return defaultErrorMessage(exception.getStatus(), exception.getMessage());
+    }
+
     public ResponseEntity<Map<String, String>> defaultErrorMessage(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(Map.of("message", message));
     }

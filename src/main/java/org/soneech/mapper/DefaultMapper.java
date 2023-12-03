@@ -1,6 +1,8 @@
 package org.soneech.mapper;
 
 import org.modelmapper.ModelMapper;
+import org.soneech.dto.request.AnswerRequestDTO;
+import org.soneech.dto.request.PollRequestDTO;
 import org.soneech.dto.request.VoteRequestDTO;
 import org.soneech.dto.response.*;
 import org.soneech.model.Answer;
@@ -101,5 +103,22 @@ public class DefaultMapper {
         vote.setUser(user);
 
         return vote;
+    }
+
+    public Answer convertToAnswer(AnswerRequestDTO answerRequestDTO, Poll poll) {
+        Answer answer = modelMapper.map(answerRequestDTO, Answer.class);
+        answer.setPoll(poll);
+        return answer;
+    }
+
+    public Poll convertToPoll(PollRequestDTO pollRequestDTO, User user) {
+        Poll poll = modelMapper.map(pollRequestDTO, Poll.class);
+        poll.setUser(user);
+        List<Answer> answers = poll.getAnswers();
+        for (AnswerRequestDTO answerDTO: pollRequestDTO.getAnswerRequestDTOS()) {
+            answers.add(convertToAnswer(answerDTO, poll));
+        }
+
+        return poll;
     }
 }

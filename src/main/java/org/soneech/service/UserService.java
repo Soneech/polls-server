@@ -59,10 +59,4 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
-
-    public User getUserByClaimsInJWT(String jwt) {
-        String username = jwtUtil.validateTokenAndRetrieveClaim(jwt);
-        Optional<User> foundUser = findByName(username);
-        return foundUser.orElse(null);
-    }
 }

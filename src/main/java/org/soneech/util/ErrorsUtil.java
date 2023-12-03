@@ -8,10 +8,8 @@ public class ErrorsUtil {
     public String prepareFieldsErrorMessage(BindingResult bindingResult) {
         StringBuilder stringBuilder = new StringBuilder();
         for (var error: bindingResult.getFieldErrors()) {
-            stringBuilder.append(error.getField()).append(":");
-            stringBuilder.append(error.getDefaultMessage()).append(";");
+            stringBuilder.append(error.getDefaultMessage()).append('\n');
         }
-
         return stringBuilder.toString();
     }
 }
