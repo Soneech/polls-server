@@ -1,8 +1,8 @@
 package org.soneech.controller;
 
 import jakarta.validation.Valid;
-import org.soneech.dto.response.AuthenticationDTO;
-import org.soneech.dto.response.RegistrationDTO;
+import org.soneech.dto.request.AuthenticationDTO;
+import org.soneech.dto.request.RegistrationDTO;
 import org.soneech.dto.response.UserInfoDTO;
 import org.soneech.exception.AuthException;
 import org.soneech.mapper.DefaultMapper;
@@ -20,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -51,7 +52,7 @@ public class AuthController {
         userValidator.validate(user, bindingResult);
 
         if (bindingResult.hasErrors())
-            throw new AuthException(HttpStatus.BAD_REQUEST, errorsUtil.prepareFieldsErrorMessage(bindingResult));
+            throw new AuthException(errorsUtil.getFieldsErrorMessages(bindingResult));
 
         User savedUser = userService.register(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.convertToUserInfoDTO(savedUser));
@@ -67,7 +68,7 @@ public class AuthController {
         try {
             authenticationManager.authenticate(authToken);
         } catch (AuthenticationException exception) {
-            throw new AuthException(HttpStatus.BAD_REQUEST, "Неверный логин или пароль");
+            throw new AuthException(Collections.singletonList("Неверный логин или пароль"));
         }
 
         String jwt = jwtUtil.generateToken(authenticationDTO.getName());

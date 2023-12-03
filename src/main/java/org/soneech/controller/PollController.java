@@ -80,9 +80,8 @@ public class PollController {
     @PostMapping
     public ResponseEntity<Map<String, String>> createPoll(@RequestBody @Valid PollRequestDTO pollRequestDTO,
                                                             BindingResult bindingResult) {
-        System.out.println(pollRequestDTO);
         if (bindingResult.hasErrors())
-            throw new PollException(errorsUtil.prepareFieldsErrorMessage(bindingResult));
+            throw new PollException(errorsUtil.getFieldsErrorMessages(bindingResult));
 
         User user = userService.findByName(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         Poll poll = mapper.convertToPoll(pollRequestDTO, user);

@@ -3,6 +3,7 @@ package org.soneech.mapper;
 import org.modelmapper.ModelMapper;
 import org.soneech.dto.request.AnswerRequestDTO;
 import org.soneech.dto.request.PollRequestDTO;
+import org.soneech.dto.request.RegistrationDTO;
 import org.soneech.dto.request.VoteRequestDTO;
 import org.soneech.dto.response.*;
 import org.soneech.model.Answer;

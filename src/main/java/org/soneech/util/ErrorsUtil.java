@@ -3,13 +3,17 @@ package org.soneech.util;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Component
 public class ErrorsUtil {
-    public String prepareFieldsErrorMessage(BindingResult bindingResult) {
-        StringBuilder stringBuilder = new StringBuilder();
+    public List<String> getFieldsErrorMessages(BindingResult bindingResult) {
+        Set<String> errors = new HashSet<>();
         for (var error: bindingResult.getFieldErrors()) {
-            stringBuilder.append(error.getDefaultMessage()).append('\n');
+            errors.add(error.getDefaultMessage());
         }
-        return stringBuilder.toString();
+        return errors.stream().toList();
     }
 }

@@ -5,13 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.List;
 import java.util.Map;
 
 @ControllerAdvice
 public class DefaultAdvice {
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handleAuthException(AuthException exception) {
-        return defaultErrorMessage(exception.getStatus(), exception.getMessage());
+    public ResponseEntity<Map<String, List<String>>> handleAuthException(AuthException exception) {
+        return ResponseEntity.status(exception.getStatus()).body(Map.of("messages", exception.getErrorMessages()));
     }
 
     @ExceptionHandler
@@ -30,8 +31,8 @@ public class DefaultAdvice {
     }
 
     @ExceptionHandler
-    public ResponseEntity<Map<String, String>> handlePollException(PollException exception) {
-        return defaultErrorMessage(exception.getStatus(), exception.getMessage());
+    public ResponseEntity<Map<String, List<String>>> handlePollException(PollException exception) {
+        return ResponseEntity.status(exception.getStatus()).body(Map.of("messages", exception.getErrorMessages()));
     }
 
     public ResponseEntity<Map<String, String>> defaultErrorMessage(HttpStatus status, String message) {
