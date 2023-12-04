@@ -20,6 +20,6 @@ public class PollDTO {
     @JsonProperty("user")
     private UserShortDTO userShortDTO;
 
-    @JsonProperty("answers")
-    private List<AnswerDTO> answerDTOS = new ArrayList<>();
+    @JsonProperty("questions")
+    private List<QuestionDTO> questionDTOS = new ArrayList<>();
 }

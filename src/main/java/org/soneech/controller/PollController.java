@@ -2,9 +2,10 @@ package org.soneech.controller;
 
 import jakarta.validation.Valid;
 import org.soneech.dto.request.PollRequestDTO;
-import org.soneech.dto.request.VoteRequestDTO;
+import org.soneech.dto.request.VotesRequestDTO;
 import org.soneech.dto.response.PollDTO;
 import org.soneech.dto.response.PollPreviewDTO;
+import org.soneech.exception.IncompleteAnswerOnPollException;
 import org.soneech.exception.PollException;
 import org.soneech.exception.PollNotFoundException;
 import org.soneech.exception.VoteDuplicateException;
@@ -67,13 +68,16 @@ public class PollController {
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<Map<String, String>> vote(@RequestBody VoteRequestDTO voteRequestDTO)
-                                                                        throws VoteDuplicateException {
+    public ResponseEntity<Map<String, String>> vote(@RequestBody VotesRequestDTO votesRequestDTO)
+                                                                        throws VoteDuplicateException,
+                                                                                IncompleteAnswerOnPollException {
         User user = userService.findByName(SecurityContextHolder.getContext().getAuthentication().getName()).get();
-        voteValidator.validateVoteData(voteRequestDTO.getAnswerId(), user.getId(), voteRequestDTO.getPollId());
+        voteValidator.validateVotes(votesRequestDTO, user);
 
-        Vote vote = mapper.convertToVote(voteRequestDTO, user);
-        voteService.save(vote);
+        List<Vote> votes = votesRequestDTO.getVoteRequestDTOS()
+                .stream().map(v -> mapper.convertToVote(v, user)).toList();
+
+        voteService.saveAll(votes);
         return ResponseEntity.ok(Map.of("message", "Вы успешно проголосовали"));
     }
 
@@ -86,7 +90,6 @@ public class PollController {
         User user = userService.findByName(SecurityContextHolder.getContext().getAuthentication().getName()).get();
         Poll poll = mapper.convertToPoll(pollRequestDTO, user);
         pollService.save(poll);
-        answerService.saveAll(poll.getAnswers());
 
         return ResponseEntity.ok(Map.of("message", "Опрос успешно создан"));
     }

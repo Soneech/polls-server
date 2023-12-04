@@ -19,8 +19,9 @@ public class PollRequestDTO {
     @Size(min = 3, max = 255, message = "Текст темы должен содержать от 3 до 255 символов")
     private String theme;
 
-    @JsonProperty("answers")
+    @JsonProperty("questions")
     @NotNull
     @Valid
-    private List<AnswerRequestDTO> answerRequestDTOS;
+    @Size(min = 1, message = "Вы должны добавить хотя бы один вопрос")
+    private List<QuestionRequestDTO> questionRequestDTOS;
 }

@@ -35,6 +35,12 @@ public class DefaultAdvice {
         return ResponseEntity.status(exception.getStatus()).body(Map.of("messages", exception.getErrorMessages()));
     }
 
+    @ExceptionHandler
+    public ResponseEntity<Map<String, String>> handleIncompleteAnswerOnPollException(
+                                                                        IncompleteAnswerOnPollException exception) {
+        return defaultErrorMessage(exception.getStatus(), exception.getMessage());
+    }
+
     public ResponseEntity<Map<String, String>> defaultErrorMessage(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(Map.of("message", message));
     }

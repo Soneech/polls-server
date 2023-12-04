@@ -2,6 +2,7 @@ package org.soneech.service;
 
 import org.soneech.exception.PollNotFoundException;
 import org.soneech.model.Poll;
+import org.soneech.model.Question;
 import org.soneech.repository.PollRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,15 @@ import java.util.Optional;
 @Service
 public class PollService {
     private final PollRepository pollRepository;
+    private final QuestionService questionService;
+    private final AnswerService answerService;
 
     @Autowired
-    public PollService(PollRepository pollRepository) {
+    public PollService(PollRepository pollRepository,
+                       QuestionService questionService, AnswerService answerService) {
         this.pollRepository = pollRepository;
+        this.questionService = questionService;
+        this.answerService = answerService;
     }
 
     public List<Poll> findAll() {
@@ -34,8 +40,15 @@ public class PollService {
         return pollRepository.findPollsInWhichUserVoted(userId);
     }
 
-    public Poll save(Poll poll) {
+    public void save(Poll poll) {
         poll.setCreatedAt(LocalDateTime.now());
-        return pollRepository.save(poll);
+        pollRepository.save(poll);
+
+        List<Question> questions = poll.getQuestions();
+        questionService.saveAll(questions);
+
+        for (Question question: questions) {
+            answerService.saveAll(question.getAnswers());
+        }
     }
 }

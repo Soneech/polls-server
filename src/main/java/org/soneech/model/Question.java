@@ -2,38 +2,32 @@ package org.soneech.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "poll")
+@Table(name = "question")
 @NoArgsConstructor
 @Getter
 @Setter
-public class Poll {
+public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Size(min = 3, max = 255)
-    private String theme;
+    @Size(min = 2, max = 100)
+    private String text;
 
-    @NotNull
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "question")
+    private List<Answer> answers = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
-
-    @OneToMany(mappedBy = "poll")
-    private List<Question> questions = new ArrayList<>();
+    @JoinColumn(name = "poll_id", referencedColumnName = "id")
+    private Poll poll;
 }

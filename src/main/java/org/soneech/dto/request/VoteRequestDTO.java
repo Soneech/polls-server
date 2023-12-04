@@ -9,7 +9,4 @@ import lombok.Setter;
 public class VoteRequestDTO {
     @JsonProperty("answer_id")
     private Long answerId;
-
-    @JsonProperty("poll_id")
-    private Long pollId;
 }

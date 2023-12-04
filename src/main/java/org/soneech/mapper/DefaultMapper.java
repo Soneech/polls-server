@@ -1,15 +1,9 @@
 package org.soneech.mapper;
 
 import org.modelmapper.ModelMapper;
-import org.soneech.dto.request.AnswerRequestDTO;
-import org.soneech.dto.request.PollRequestDTO;
-import org.soneech.dto.request.RegistrationDTO;
-import org.soneech.dto.request.VoteRequestDTO;
+import org.soneech.dto.request.*;
 import org.soneech.dto.response.*;
-import org.soneech.model.Answer;
-import org.soneech.model.Poll;
-import org.soneech.model.User;
-import org.soneech.model.Vote;
+import org.soneech.model.*;
 import org.soneech.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,7 +51,6 @@ public class DefaultMapper {
     }
 
     public UserShortDTO convertToUserShortDTO(User user) {
-
         return modelMapper.map(user, UserShortDTO.class);
     }
 
@@ -77,13 +70,23 @@ public class DefaultMapper {
         return answerDTO;
     }
 
+    public QuestionDTO convertToQuestionDTO(Question question) {
+        QuestionDTO questionDTO = modelMapper.map(question, QuestionDTO.class);
+        List<AnswerDTO> answerDTOS = questionDTO.getAnswerDTOS();
+
+        for (Answer answer: question.getAnswers()) {
+            answerDTOS.add(convertToAnswerDTO(answer));
+        }
+        return questionDTO;
+    }
+
     public PollDTO convertToPollDTO(Poll poll) {
         PollDTO pollDTO = modelMapper.map(poll, PollDTO.class);
         pollDTO.setUserShortDTO(convertToUserShortDTO(poll.getUser()));
 
-        List<AnswerDTO> answerDTOS = pollDTO.getAnswerDTOS();
-        for (Answer answer: poll.getAnswers()) {
-            answerDTOS.add(convertToAnswerDTO(answer));
+        List<QuestionDTO> questionDTOS = pollDTO.getQuestionDTOS();
+        for (Question question: poll.getQuestions()) {
+            questionDTOS.add(convertToQuestionDTO(question));
         }
         return pollDTO;
     }
@@ -106,18 +109,29 @@ public class DefaultMapper {
         return vote;
     }
 
-    public Answer convertToAnswer(AnswerRequestDTO answerRequestDTO, Poll poll) {
+    public Answer convertToAnswer(AnswerRequestDTO answerRequestDTO, Question question) {
         Answer answer = modelMapper.map(answerRequestDTO, Answer.class);
-        answer.setPoll(poll);
+        answer.setQuestion(question);
         return answer;
+    }
+
+    public Question convertToQuestion(QuestionRequestDTO questionRequestDTO, Poll poll) {
+        Question question = modelMapper.map(questionRequestDTO, Question.class);
+        question.setPoll(poll);
+        List<Answer> answers = question.getAnswers();
+
+        for (AnswerRequestDTO answerDTO: questionRequestDTO.getAnswerRequestDTOS()) {
+            answers.add(convertToAnswer(answerDTO, question));
+        }
+        return question;
     }
 
     public Poll convertToPoll(PollRequestDTO pollRequestDTO, User user) {
         Poll poll = modelMapper.map(pollRequestDTO, Poll.class);
         poll.setUser(user);
-        List<Answer> answers = poll.getAnswers();
-        for (AnswerRequestDTO answerDTO: pollRequestDTO.getAnswerRequestDTOS()) {
-            answers.add(convertToAnswer(answerDTO, poll));
+        List<Question> questions = poll.getQuestions();
+        for (QuestionRequestDTO questionDTO: pollRequestDTO.getQuestionRequestDTOS()) {
+            questions.add(convertToQuestion(questionDTO, poll));
         }
 
         return poll;

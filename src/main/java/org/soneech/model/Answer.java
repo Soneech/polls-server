@@ -25,10 +25,10 @@ public class Answer {
     @Size(min = 2, max = 100)
     private String text;
 
-    @ManyToOne
-    @JoinColumn(name = "poll_id", referencedColumnName = "id")
-    private Poll poll;
-
     @OneToMany(mappedBy = "answer")
     private List<Vote> votes = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "question_id", referencedColumnName = "id")
+    private Question question;
 }

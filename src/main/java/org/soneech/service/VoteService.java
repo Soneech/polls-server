@@ -5,6 +5,7 @@ import org.soneech.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,11 +21,15 @@ public class VoteService {
         return voteRepository.findVoteByAnswerIdAndUserId(answerId, userId);
     }
 
-    public Optional<Vote> findUserVoteInThisPoll(Long pollId, Long userId) {
-        return voteRepository.findUserVoteInThisPoll(pollId, userId);
+    public List<Vote> findUserVotesInThisPoll(Long pollId, Long userId) {
+        return voteRepository.findUserVotesInThisPoll(pollId, userId);
     }
 
     public Vote save(Vote vote) {
         return voteRepository.save(vote);
+    }
+
+    public void saveAll(List<Vote> votes) {
+        voteRepository.saveAll(votes);
     }
 }
