@@ -1,26 +1,21 @@
 package org.soneech.mapper;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.soneech.dto.request.*;
 import org.soneech.dto.response.*;
 import org.soneech.model.*;
 import org.soneech.service.AnswerService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class DefaultMapper {
     private final ModelMapper modelMapper;
     private final AnswerService answerService;
-
-    @Autowired
-    public DefaultMapper(ModelMapper modelMapper, AnswerService answerService) {
-        this.modelMapper = modelMapper;
-        this.answerService = answerService;
-    }
 
     public User convertToUser(RegistrationDTO registrationDTO) {
         return modelMapper.map(registrationDTO, User.class);

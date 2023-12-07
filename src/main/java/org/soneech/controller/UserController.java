@@ -1,12 +1,12 @@
 package org.soneech.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.soneech.dto.response.UserDTO;
 import org.soneech.dto.response.UserPublicInfoDTO;
 import org.soneech.exception.UserNotFoundException;
 import org.soneech.mapper.DefaultMapper;
 import org.soneech.model.User;
 import org.soneech.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,15 +19,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final DefaultMapper defaultMapper;
-
-    @Autowired
-    public UserController(UserService userService, DefaultMapper defaultMapper) {
-        this.userService = userService;
-        this.defaultMapper = defaultMapper;
-    }
 
     @GetMapping
     public ResponseEntity<List<UserPublicInfoDTO>> getAllUsers() {

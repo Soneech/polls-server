@@ -1,10 +1,10 @@
 package org.soneech.service;
 
+import lombok.RequiredArgsConstructor;
 import org.soneech.exception.UserNotFoundException;
 import org.soneech.model.User;
 import org.soneech.repository.RoleRepository;
 import org.soneech.repository.UserRepository;
-import org.soneech.security.JWTUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,22 +15,12 @@ import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PollService pollService;
     private final PasswordEncoder passwordEncoder;
-    private final JWTUtil jwtUtil;
-
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository,
-                       PollService pollService, PasswordEncoder passwordEncoder, JWTUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.pollService = pollService;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
 
     public List<User> findAll() {
         return userRepository.findAll();

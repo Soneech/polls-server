@@ -1,6 +1,7 @@
 package org.soneech.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.soneech.dto.request.AuthenticationDTO;
 import org.soneech.dto.request.RegistrationDTO;
 import org.soneech.dto.response.UserInfoDTO;
@@ -11,7 +12,6 @@ import org.soneech.security.JWTUtil;
 import org.soneech.service.UserService;
 import org.soneech.util.ErrorsUtil;
 import org.soneech.util.UserValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final DefaultMapper mapper;
     private final UserValidator userValidator;
@@ -32,18 +33,6 @@ public class AuthController {
     private final UserService userService;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-
-    @Autowired
-    public AuthController(DefaultMapper mapper, UserValidator userValidator,
-                          ErrorsUtil errorsUtil, UserService userService, JWTUtil jwtUtil,
-                          AuthenticationManager authenticationManager) {
-        this.mapper = mapper;
-        this.userValidator = userValidator;
-        this.errorsUtil = errorsUtil;
-        this.userService = userService;
-        this.jwtUtil = jwtUtil;
-        this.authenticationManager = authenticationManager;
-    }
 
     @PostMapping("/registration")
     public ResponseEntity<UserInfoDTO> register(@RequestBody @Valid RegistrationDTO registrationDTO,

@@ -1,5 +1,6 @@
 package org.soneech.util;
 
+import lombok.RequiredArgsConstructor;
 import org.soneech.dto.request.VotesRequestDTO;
 import org.soneech.exception.IncompleteAnswerOnPollException;
 import org.soneech.exception.VoteDuplicateException;
@@ -15,14 +16,10 @@ import java.util.List;
 import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class VoteValidator {
     private final VoteService voteService;
     private final QuestionService questionService;
-
-    public VoteValidator(VoteService voteService, QuestionService questionService) {
-        this.voteService = voteService;
-        this.questionService = questionService;
-    }
 
     public void validateVotes(VotesRequestDTO votesRequestDTO, User user) {
         validateOnDuplicateVoting(user.getId(), votesRequestDTO.getPollId());

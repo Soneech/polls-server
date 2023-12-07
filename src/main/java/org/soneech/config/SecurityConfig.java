@@ -1,7 +1,7 @@
 package org.soneech.config;
 
+import lombok.RequiredArgsConstructor;
 import org.soneech.service.UserCredentialsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,15 +23,10 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final UserCredentialsService userCredentialsService;
     private final JWTFilter jwtFilter;
-
-    @Autowired
-    public SecurityConfig(UserCredentialsService userCredentialsService, JWTFilter jwtFilter) {
-        this.userCredentialsService = userCredentialsService;
-        this.jwtFilter = jwtFilter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,7 +34,6 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        //.requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/auth/login", "/auth/registration", "/error").permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .formLogin(login -> login
